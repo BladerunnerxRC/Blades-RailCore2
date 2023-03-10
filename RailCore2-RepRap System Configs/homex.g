@@ -1,8 +1,8 @@
 ; X axis homing file for dc42 Duet firmware
-G91
-G1 Z4 F200 H2		;_RRF3_ change S2 to H2
-G1 X-320 F3000 H1	;_RRF3_ change S1 to H1
-G1 X4 F600
-G1 X-10 H1		;_RRF3_ change S1 to H1
-G1 Z-4 F200 H2		;_RRF3_ change S2 to H2
-G90
+G91                 ; relative positioning
+G1 Z4 F1000 H2		; lift Z relative to current position
+G1 X-320 F4000 H1	; move quickly to X axis endstop and stop there (first pass)
+G1 X5 F1000         ; go back a few mm
+G1 X-10 H1 F200		; move slowly to X axis endstop once more (second pass)
+G1 Z-5 F200 H2		; lower Z again
+G90                 ; absolute positioning
