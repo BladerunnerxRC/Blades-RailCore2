@@ -18,7 +18,7 @@ M555 P2                           	; Set output to look like Marlin
 M575 P1 B57600 S1					; Comms parameters for PanelDue
 M550 P"RailCore2"					; Machine name and Netbios name (can be anything you like)
 
-;M551 Pmyrap                        ; Machine password (used for FTP)
+M551 Pmyrap                        ; Machine password (used for FTP)
 ;*** If you have more than one Duet on your network, they must all have different MAC addresses, so change the last digits
 ;M540 P0xBE:0xEF:0xDE:0xAD:0xFE:0xEE 	; MAC Address
 
@@ -41,7 +41,7 @@ M569 P7 S0							; Drive 7 goes backwards	Right Z
 M350 X16 Y16 Z16 E16 I1             ; set 16x microstepping for axes& extruder, with interpolation 
 ;_RRF3_ comment out:M574 X1 Y1 Z0 S1; set homing switch configuration (x,y at min, z at max) IF YOU NEED TO REVERSE YOUR HOMING SWITCHES CHANGE S1 to S0
 
-M906 X1400 Y1400 Z1000 E800 I60	    ; Set motor currents (mA)- changed x-y from 1400 to 1275 4/11/2020 changed back to 1400 5/4/2020
+M906 X1400 Y1400 Z1000 E800 I60	    ; Set motor currents (mA)- changed x-y to 1400 5/4/2020
 M201 X1750 Y1750 Z250 E1500         ; Accelerations (mm/s^2) chg from X3000 Y3000 Z100 E1500
 M203 X24000 Y24000 Z900 E3600       ; Maximum speeds (mm/min)
 M566 X600 Y600 Z200 E3600           ; Maximum jerk speeds mm/minute changed jerk from X1000 Y1000 Z100 E1500
