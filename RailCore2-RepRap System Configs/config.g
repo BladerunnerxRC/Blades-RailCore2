@@ -58,25 +58,25 @@ M671 X-10:-10:333  Y22.5:277.5:150 S7.5  ;Front left, Rear Left, Right  S7.5 is 
 ;EXTRUDER E-STEPS
 M92 X200 Y200 Z1600 E826	        ; steps/mm - old E steps 837 changed to 826  04/11/2020
 
-;HOTEND HEATERS
-M950 H1 C"e0heat" T1				;_RRF3_ define Hotend heater is on e0heat
+;HEATERS
+;
+M308 S1 P"e0temp" Y"thermistor" A"e0_heat" T100000 B4725 R4700 C7.06e-8 H0 L0	; configure sensor 1 as thermistor on pin e0temp (Hotend)
+M950 H1 C"e0heat" T1				;define Hotend heater is on e0heat
+M143 H1 S300                        ; set the maximum temperature of the hot-end default=300C
+;-----------------------------------------------------------------------------------
 ;If you have a Slice Engineering thermistor, comment out the next line -- Note Filastruder Kit Shipped with E3D thermistor
 ;_RRF3_ comment out: M305 P1 T100000 B4725 R4700 H0 L0 C7.06e-8	; Put your own H and/or L values here to set the first nozzle thermistor ADC correction
-M308 S1 P"e0temp" Y"thermistor" A"e0_heat" T100000 B4725 R4700 C7.06e-8 H0 L0	;_RRF3_ duet3 e3d
-;HOTEND MAX TEMP
-M143 S275      ; set the maximum temperature of the hot-end default=262C
-
-
-
-;BED HEATER H0
-M950 H0 C"bedheat" T0				;_RRF3_ define Bed heater is on bedheat
+;
+;BED HEATER
+				;_RRF3_ define Bed heater is on bedheat
 ;_RRF3_ comment out: M305 P0 T100000 B3950 R4700 H0 L0	; Put your own H and/or L values here to set the bed thermistor ADC correction
-
+;-----------------------------------------------------------------------------------
 M308 S0 P"bedtemp" Y"thermistor" A"bed_heat" T100000 B3950 R4700 H0 L0 		;_RRF3_ Bed thermistor, connected to bedtemp on Duet2
+M950 H0 C"bedheat" T0               ; create bed heater output on bedheat and map it to sensor 0
+M140 H0                             ; Inform the firmware that bed heater 0 uses heater 0
+M140 H0                             ; Standby and initial Temp for bed set to 0 (-273 = "off")  (** before M143 )
+M143 H0 S120                        ; set the maximum bed temperature default=120C
 M570 S360				            ; HEATER TIMEOUT - Hot end may be a little slow to heat up so allow it 180 seconds
-M140 H0                             ;  (H0 as per 3.0 RC11 ** before M143 )
-;HEATBED MAX TEMP
-M143 H0 S120                        ; set the maximum bed temperature default=125C
 
 ;PID SETTINGS  
 M307 H1 A457.8 C194.7 D3.2 S1.00 V24.0 B0 ; Hotend Heater 1 - Hot-end - PID tuned @ 240C 4/10/2020
@@ -98,7 +98,9 @@ M106 P3 S0
 	
 ; TOOL DEFINITIONS
 M563 P0 D0 H1                      	; Define tool 0
+G10 P0 X0 Y0 Z0                     ; Set tool 0 axis offsets
 G10 P0 S0 R0                       	; Set tool 0 operating and standby temperatures
+G10 P0 S0 R0 F1					    ; Set tool 0 operating and standby temperatures(-273 = "off")
 
 
 ; Z PROBE AND COMPENSATION DEFINITION
