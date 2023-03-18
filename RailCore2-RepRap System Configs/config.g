@@ -144,7 +144,7 @@ M950 S0 C"duex.pwm1"				   ; _RRF3_ Define BLTouch Servo (S0) on duet pwm1
 ;G31 X2 Y42 Z3.59 P25 ; 0.5mm Nozzle-x -- Customize your offsets appropriately - do a paper test, and put the probed value in the Z value here
 ;G31 X2 Y42 Z3.67 P25 ; 0.3mm Brass -- Customize your offsets appropriately - do a paper test, and put the probed value in the Z value here
 ;G31 X2 Y42 Z3.655 P25 ; 0.8mm E3D Copper-- Customize your offsets appropriately - do a paper test, and put the probed value in the Z value here
-G31 X2 Y42 Z3.09 P25 ; 0.6mm Bondtech CHT -- Customize your offsets appropriately - do a paper test, and put the probed value in the Z value here
+G31 X2 Y42 Z3.36 P25 ; 0.6mm Bondtech CHT -- Customize your offsets appropriately - do a paper test, and put the probed value in the Z value here
 ;G31 X2 Y42 Z3.283 P25 ; 0.8mm Bondtech CHT -- Customize your offsets appropriately - do a paper test, and put the probed value in the Z value here
 
 ; PRESSURE ADVANCE
