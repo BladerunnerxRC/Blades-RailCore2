@@ -1,56 +1,55 @@
 ; Configuration file for My Printer - RepRap Firmware v3.x
 
 ; COMMUNICATION AND GENERAL
-M111 S0                             ; Debug (S0 is off; S1 is on)
-M929 P"eventlog.txt" S2             ; Start logging to file eventlog.txt
-M915 X Y S10 F0 R1                  ; log motor stalls
-G21                                	; Work in millimetres
-G90                              	; Send absolute coordinates...
-M83                                 ; ...but relative extruder moves
-M669 K1							    ; Select CoreXY kinematics (RRF 2.03 and later)
+M111 S0                            	 ; Debug (S0 is off; S1 is on)
+M929 P"eventlog.txt" S2             	; Start logging to file eventlog.txt
+M915 X Y S10 F0 R1                  	; log motor stalls
+G21                           	        ; Work in millimetres
+G90                            	        ; Send absolute coordinates...
+M83                                	; ...but relative extruder moves
+M669 K1					; Select CoreXY kinematics (RRF 2.03 and later)
 M555 P2								; Set output to look like Marlin
 
 ;*** Wifi NETWORKING
 M552 S1								; Enable WiFi
-;M586 P0 S1                         ; enable HTTP
-M586 P1 S1                          ; enable FTP
+;M586 P0 S1                         	; enable HTTP
+M586 P1 S1                          	; enable FTP
 M555 P2                           	; Set output to look like Marlin
-M575 P1 B57600 S1					; Comms parameters for PanelDue
-M550 P"RailCore2"					; Machine name and Netbios name (can be anything you like)
+M575 P1 B57600 S1			; Comms parameters for PanelDue
+M550 P"RailCore2"			; Machine name and Netbios name (can be anything you like)
 
 M551 Pmyrap                        ; Machine password (used for FTP)
 ;*** If you have more than one Duet on your network, they must all have different MAC addresses, so change the last digits
 ;M540 P0xBE:0xEF:0xDE:0xAD:0xFE:0xEE 	; MAC Address
 
 
-; AXIS AND MOTOR CONFIGURATION
+; (AXIS AND MOTOR CONFIGURATION)
 
-
-M584 X0 Y1 Z5:6:7 E3		        ; Map Z to drivers 5, 6, 7. Define unused drivers 3,4,8 and 9 as extruders removed - E 4,8 and 9 per Duet3D Support 4/13/2020
-M569 P0 S0                          ; Drive 0 goes forwards (change to S0 to reverse it) X stepper (Rear)
-M569 P1 S1                          ; Drive 1 goes backwards	Y Stepper (Front)
-M569 P2 S1                          ; Drive 2 goes forwards		(Unused)
-M569 P3 S0                          ; Drive 3 goes forwards		Extruder (forward for LDO motor)
-M569 P4 S1                          ; Drive 4 goes forwards		(unused)
-M569 P5 S0							; Drive 5 goes backwards	Front Left Z
-M569 P6 S0							; Drive 6 goes backwards	Rear Left Z
-M569 P7 S0							; Drive 7 goes backwards	Right Z
+M584 X0 Y1 Z5:6:7 E3		   	; Map Z to drivers 5, 6, 7. Define unused drivers 3,4,8 and 9 as extruders removed - E 4,8 and 9 per Duet3D Support 4/13/2020
+M569 P0 S0                          	; Drive 0 goes forwards (change to S0 to reverse it) X stepper (Rear)
+M569 P1 S1                          	; Drive 1 goes backwards	Y Stepper (Front)
+M569 P2 S1                          	; Drive 2 goes forwards		(Unused)
+M569 P3 S0                        	; Drive 3 goes forwards		Extruder (forward for LDO motor)
+M569 P4 S1                          	; Drive 4 goes forwards		(unused)
+M569 P5 S0				; Drive 5 goes backwards	Front Left Z
+M569 P6 S0				; Drive 6 goes backwards	Rear Left Z
+M569 P7 S0				; Drive 7 goes backwards	Right Z
 
 
 ;STEPPERS
 M350 X16 Y16 Z16 E16 I1             ; set 16x microstepping for axes& extruder, with interpolation 
 ;_RRF3_ comment out:M574 X1 Y1 Z0 S1; set homing switch configuration (x,y at min, z at max) IF YOU NEED TO REVERSE YOUR HOMING SWITCHES CHANGE S1 to S0
 
-M906 X1400 Y1400 Z1000 E800 I60	    ; Set motor currents (mA)- changed x-y to 1400 5/4/2020
-M201 X1750 Y1750 Z250 E1500         ; Accelerations (mm/s^2) chg from X3000 Y3000 Z100 E1500
-M203 X24000 Y24000 Z900 E3600       ; Maximum speeds (mm/min)
-M566 X600 Y600 Z200 E3600           ; Maximum jerk speeds mm/minute changed jerk from X1000 Y1000 Z100 E1500
+M906 X1400 Y1400 Z1000 E800 I60	    	; Set motor currents (mA)- changed x-y to 1400 5/4/2020
+M201 X1750 Y1750 Z250 E1500     	; Accelerations (mm/s^2) chg from X3000 Y3000 Z100 E1500
+M203 X24000 Y24000 Z900 E3600     	; Maximum speeds (mm/min)
+M566 X600 Y600 Z200 E3600               ; Maximum jerk speeds mm/minute changed jerk from X1000 Y1000 Z100 E1500
 
 ;END STOPS
-M574 X1 S1 P"xstop"			        ; _RRF3_ set X endstop to xstop port active high
-M574 Y1 S1 P"ystop"			        ; _RRF3_ set Y endstop to ystop port active high
-M208 X290 Y300 Z310                 ; set axis maxima and high homing switch positions (adjust to suit your machine) set on 5/1/2020 
-M208 X0 Y0 Z-0.5 S1                 ; set axis minima and low homing switch positions (adjust to make X=0 and Y=0 the edges of the bed)
+M574 X1 S1 P"xstop"			; _RRF3_ set X endstop to xstop port active high
+M574 Y1 S1 P"ystop"			; _RRF3_ set Y endstop to ystop port active high
+M208 X290 Y300 Z310                 	; set axis maxima and high homing switch positions (adjust to suit your machine) set on 5/1/2020 
+M208 X0 Y0 Z-0.5 S1                 	; set axis minima and low homing switch positions (adjust to make X=0 and Y=0 the edges of the bed)
 
 ;LEADSCREW LOCATIONS
 M671 X-10:-10:333  Y22.5:277.5:150 S7.5  ;Front left, Rear Left, Right  S7.5 is the max correction - measure your own offsets, to the bolt for the yoke of each leadscrew
@@ -123,6 +122,9 @@ M950 S0 C"duex.pwm1"				   ; _RRF3_ Define BLTouch Servo (S0) on duet pwm1
 ;G31 X2 Y42 Z3.655 P25 ; 0.8mm E3D Copper-- Customize your offsets appropriately - do a paper test, and put the probed value in the Z value here
 G31 X2 Y42 Z3.09 P25 ; 0.6mm Bondtech CHT -- Customize your offsets appropriately - do a paper test, and put the probed value in the Z value here
 ;G31 X2 Y42 Z3.283 P25 ; 0.8mm Bondtech CHT -- Customize your offsets appropriately - do a paper test, and put the probed value in the Z value here
+
+; PRESSURE ADVANCE
+M572 D0 S0.06 ; set extruder 0 pressure advance to 0.06 seconds
 
 ;INPUT SHAPING
 ;M955 P0 C"spi.cs4+spi.cs3" I52 ; Uncomment to activate accelerometer for measurments
