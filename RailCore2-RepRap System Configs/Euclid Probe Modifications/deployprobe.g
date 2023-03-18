@@ -1,6 +1,8 @@
-; ------------======Deploy Bed leveling Probe=======------
-; M280 P0 S10 	;Set servo position
-; Euclid Code Below
+; ***********************************************************
+; deployprobe.g
+; Modified 19d July 2021 - osh
+; ***********************************************************
+
 echo "DEBUG: Running deployprobe.g"
 ; uncomment next line to echo the probe deploy state 
 echo "deployuser token = " ^sensors.probes[0].deployedByUser
