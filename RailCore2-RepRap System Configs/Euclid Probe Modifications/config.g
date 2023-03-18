@@ -6,13 +6,13 @@
 
 ; Debugging
 M111 S0												; Debug (S0 is off; S1 is on)
-M929 P"eventlog.txt" S1								; start logging to file eventlog.txt
-M915 X Y S10 F0 R1                                  ; log motor stalls (added 5/4/2019)
+M929 P"eventlog.txt" S1							; start logging to file eventlog.txt
+M915 X Y S10 F0 R1                        ; log motor stalls (added 5/4/2019)
 
 ; General preferences
 G21													; Work in millimetres
-G90                                                 ; Send absolute coordinates...
-M83                                                 ; ...but relative extruder moves
+G90                                       ; Send absolute coordinates...
+M83                                       ; ...but relative extruder moves
 
 M555 P2												; Set output to look like Marlin
 M669 K1												; Select CoreXY kinematics (RRF 2.03 and later)
@@ -39,14 +39,14 @@ M569 P7 S0											; Drive 7 goes backwards	Right Z
 M671 X-11:-11:347  Y20:274:144 S7.5  				; Front left (-11,20), Rear Left (-11,274), Right (347,144)    9/1/2020 - osh - S7.5 is the max correction - measure your own offsets, to the bolt for the yoke of each leadscrew
 
 ; Axis and motor configurations
-M350 X16 Y16 Z16 E16 I1                             ; Configure 16x microstepping with interpolation
-M906 X1200 Y1200 Z1200 E860 I30                     ; Set motor currents (mA) and motor idle factor in per cent (docs say rounds to 100, but this is where I'd like them to be)
-M92 X200.0 Y200.0 Z1600.0 E836.0                    ; Set steps per mm (25 June 2019)
-M566 X600 Y600 Z200 E3600             			    ; Set maximum instantaneous (jerk) speed changes (mm/min)
-M201 X1750 Y1750 Z250 E1500                         ; Set accelerations (mm/s^2)
-M203 X24000 Y24000 Z900 E3600       			    ; Set maximum speeds (mm/min)
-M84 S60												; Set motor idle timeout
-M579 X1.0028 Y1.0021								; Scale X and Y axis
+M350 X16 Y16 Z16 E16 I1                               ; Configure 16x microstepping with interpolation
+M906 X1200 Y1200 Z1200 E860 I30                       ; Set motor currents (mA) and motor idle factor in per cent (docs say rounds to 100, but this is where I'd like them to be)
+M92 X200.0 Y200.0 Z1600.0 E836.0                      ; Set steps per mm (25 June 2019)
+M566 X600 Y600 Z200 E3600             			         ; Set maximum instantaneous (jerk) speed changes (mm/min)
+M201 X1750 Y1750 Z250 E1500                           ; Set accelerations (mm/s^2)
+M203 X24000 Y24000 Z900 E3600       			         ; Set maximum speeds (mm/min)
+M84 S60												            ; Set motor idle timeout
+M579 X1.0028 Y1.0021								            ; Scale X and Y axis
 
 ; Axis Limits
 M208 X300 Y300 Z320                 				; set axis maxima and high homing switch positions - 9/1/2020 - osh
@@ -82,9 +82,9 @@ M98 P"filamentsensor.g"								; Call external file to configure filament sensor
 ; Mesh Bed Leveling area
 
 ;M557 X2:299 Y36:299 P2:2                          ; Set Default Mesh - NOTE: take probe offset into account - corners only - 7/19/2021
-M557 X2:299 Y36:299 P9:9                            ; Set Default Mesh - NOTE: take probe offset into account - "full" bed  - 7/19/2021
-   ; E.G. If probe offset is 42 on Y, then Y50:290 will take the hotend to Y08 to Y248)
-; Heaters
+M557 X2:299 Y36:299 P9:9                           ; Set Default Mesh - NOTE: take probe offset into account - "full" bed  - 7/19/2021
+                                                   ; E.G. If probe offset is 42 on Y, then Y50:290 will take the hotend to Y08 to Y248)
+                                                   ; Heaters
 M308 S0 P"bedtemp" Y"thermistor" A"bed_heat" T100000 B3950 R4700 H0 L0  ; configure sensor 0 as thermistor on pin bedtemp
 M950 H0 C"bed_heat" T0								; create bed heater output on bedheat and map it to sensor 0
 M140 H0                                             ; Inform the firmware that bed heater 0 uses heater 0

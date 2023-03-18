@@ -11,14 +11,18 @@ M669 K1					; Select CoreXY kinematics (RRF 2.03 and later)
 M555 P2								; Set output to look like Marlin
 
 ;*** Wifi NETWORKING
+; For M586 'Pnn' 0 = HTTP or HTTPS, 1 = FTP or SFTP, 2 = Telnet or SSH
+; Snn 0 = disable this protocol, 1 = enable this protocol
 M552 S1								; Enable WiFi
-;M586 P0 S1                         	; enable HTTP
-M586 P1 S1                          	; enable FTP
+M586 P0 S1                          ; enable HTTP
+M586 P1 S1                          ; enable FTP
+M586 P2 S0                          ; Disable Telnet
+
 M555 P2                           	; Set output to look like Marlin
 M575 P1 B57600 S1			; Comms parameters for PanelDue
 M550 P"RailCore2"			; Machine name and Netbios name (can be anything you like)
 
-M551 Pmyrap                        ; Machine password (used for FTP)
+M551 Pmyrap                        ; Machine password (used for FTP too)
 ;*** If you have more than one Duet on your network, they must all have different MAC addresses, so change the last digits
 ;M540 P0xBE:0xEF:0xDE:0xAD:0xFE:0xEE 	; MAC Address
 
@@ -40,16 +44,19 @@ M569 P7 S0				; Drive 7 goes backwards	Right Z
 M350 X16 Y16 Z16 E16 I1             ; set 16x microstepping for axes& extruder, with interpolation 
 ;_RRF3_ comment out:M574 X1 Y1 Z0 S1; set homing switch configuration (x,y at min, z at max) IF YOU NEED TO REVERSE YOUR HOMING SWITCHES CHANGE S1 to S0
 
-M906 X1400 Y1400 Z1000 E800 I60	    	; Set motor currents (mA)- changed x-y to 1400 5/4/2020
-M201 X1750 Y1750 Z250 E1500     	; Accelerations (mm/s^2) chg from X3000 Y3000 Z100 E1500
-M203 X24000 Y24000 Z900 E3600     	; Maximum speeds (mm/min)
-M566 X600 Y600 Z200 E3600               ; Maximum jerk speeds mm/minute changed jerk from X1000 Y1000 Z100 E1500
+M906 X1400 Y1400 Z1000 E800 I30	    ; Set motor currents (mA)- changed x-y to 1400 5/4/2020 z=1200 and idle current(I) from 60 to 30 3/18/2023
+M84 S60								; Set motor idle timeout
+M201 X1750 Y1750 Z250 E1500         ; Accelerations (mm/s^2) chg from X3000 Y3000 Z100 E1500
+M203 X24000 Y24000 Z900 E3600       ; Maximum speeds (mm/min)
+M566 X600 Y600 Z200 E3600           ; Maximum jerk speeds mm/minute changed jerk from X1000 Y1000 Z100 E1500
+;M579 Xnn Ynn Znn					; Scale Cartesian axes. Example: assume L(set in slicer)=100mm M=actual measurement
+									; Xnnn..Ynnn..Znnn = L/M
 
 ;END STOPS
-M574 X1 S1 P"xstop"			; _RRF3_ set X endstop to xstop port active high
-M574 Y1 S1 P"ystop"			; _RRF3_ set Y endstop to ystop port active high
-M208 X290 Y300 Z310                 	; set axis maxima and high homing switch positions (adjust to suit your machine) set on 5/1/2020 
-M208 X0 Y0 Z-0.5 S1                 	; set axis minima and low homing switch positions (adjust to make X=0 and Y=0 the edges of the bed)
+M574 X1 S1 P"xstop"			        ; _RRF3_ set X endstop to xstop port active high
+M574 Y1 S1 P"ystop"			        ; _RRF3_ set Y endstop to ystop port active high
+M208 X290 Y300 Z310                 ; set axis maxima and high homing switch positions (adjust to suit your machine) set on 5/1/2020 
+M208 X0 Y0 Z-0.2 S1                 ; set axis minima and low homing switch positions (adjust to make X=0 and Y=0 the edges of the bed)
 
 ;LEADSCREW LOCATIONS
 M671 X-10:-10:333  Y22.5:277.5:150 S7.5  ;Front left, Rear Left, Right  S7.5 is the max correction - measure your own offsets, to the bolt for the yoke of each leadscrew
@@ -102,7 +109,8 @@ G10 P0 S0 R0                       	; Set tool 0 operating and standby temperatu
 G10 P0 S0 R0 F1					    ; Set tool 0 operating and standby temperatures(-273 = "off")
 
 
-; Z PROBE AND COMPENSATION DEFINITION
+; *******************Z PROBE AND COMPENSATION DEFINITION***********************
+;
 ;*** If you have a switch instead of an IR probe, change P1 to P4 in the following M558 command
 ; IR PRobe - uncomment the following 2 lines if you have a and IR Probe, and comment out the BLTouch section below
 ;RRF3 IR Probe only comment out: M558 P1 X0 Y0 Z1			; Z probe is an IR probe and is not used for homing any axes
@@ -111,10 +119,26 @@ G10 P0 S0 R0 F1					    ; Set tool 0 operating and standby temperatures(-273 = "
 
 ;Set Z probe point or define probing grid for Mandala Rose Magnetic Bed x max changed to 290 from 295 due to tongue cooler 
 M557 X10:290 Y10:295 S57:57
+;M557 X2:299 Y36:299 P9:9                           ; Set Default Mesh - NOTE: take probe offset into account - "full" bed  - 7/19/2021
+                                                   ; E.G. If probe offset is 42 on Y, then Y50:290 will take the hotend to Y08 to Y248)
+                                                   ; Heaters
 
 ;BLTouch - comment out the following 3 lines if using a IR Probe
 M558 P9 C"^zprobe.in" H5 R1 F150 T6000 A5 S0.02  ; _RRF3_ BLTouch connected to Z probe IN pin -Changed homing speed from 50 to 150 - 10-16-2022
 M950 S0 C"duex.pwm1"				   ; _RRF3_ Define BLTouch Servo (S0) on duet pwm1
+
+; Z-Probe - Euclid Detachable Omron switch probe
+
+;M558 K0 P5 C"^zprobe.in" H5 R0.5 F240:120 T9000 A2 S0.03  ; K0 for probe 0, P5 for NC switch, C for input pin, ^ for enabling the native pullup
+                                                    ; resistor on Duet2 hardware running RRF3 H dive height of 8mm, F240 probing speed ?mm/sec, 
+                                                    ; T9000 travel speed 150mm/sec, A3 number of probes 1, S0.03 max tolerance of 0.03
+
+;G31 K0 P500 X-1 Y35 Z2.84                           ; Set Z probe trigger value, offset and trigger height (18 July 2021)
+                                                    ; Tip: A larger trigger height in G31 moves you CLOSER to the bed
+                                                    ; switch plunger is 35mm to the RIGHT and 2 in FRONT of the nozzle
+                                                    ; switch triggers 0.9mm BELOW nozzle
+                                                    ; https://duet3d.dozuki.com/Wiki/Test_and_calibrate_the_Z_probe#Section_Fine_tuning_the_trigger_height
+                                
 
 ; OFFSET FOR SPECIFIC NOZZLES CURRENTLY INSTALLED
 ;G31 X2 Y42 Z3.59 P25 ; 0.5mm Nozzle-x -- Customize your offsets appropriately - do a paper test, and put the probed value in the Z value here
