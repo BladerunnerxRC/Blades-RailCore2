@@ -7,7 +7,7 @@ M915 X Y S10 F0 R1                  	; log motor stalls
 G21                           	        ; Work in millimetres
 G90                            	        ; Send absolute coordinates...
 M83                                	; ...but relative extruder moves
-M669 K1					; Select CoreXY kinematics (RRF 2.03 and later)
+M669 K1					            ; Select CoreXY kinematics (RRF 2.03 and later)
 M555 P2								; Set output to look like Marlin
 
 ;*** Wifi NETWORKING
@@ -19,10 +19,10 @@ M586 P1 S1                          ; enable FTP
 M586 P2 S0                          ; Disable Telnet
 
 M555 P2                           	; Set output to look like Marlin
-M575 P1 B57600 S1			; Comms parameters for PanelDue
-M550 P"RailCore2"			; Machine name and Netbios name (can be anything you like)
+M575 P1 B57600 S1			        ; Comms parameters for PanelDue
+M550 P"RailCore2"			        ; Machine name and Netbios name (can be anything you like)
 
-M551 Pmyrap                        ; Machine password (used for FTP too)
+M551 Pmyrap                         ; Machine password (used for FTP too)
 ;*** If you have more than one Duet on your network, they must all have different MAC addresses, so change the last digits
 ;M540 P0xBE:0xEF:0xDE:0xAD:0xFE:0xEE 	; MAC Address
 
@@ -118,26 +118,28 @@ G10 P0 S0 R0 F1					    ; Set tool 0 operating and standby temperatures(-273 = "
 ;G31 X0 Y30 Z2.00 P500			; Set the zprobe height and threshold (put your own values here) 
 
 ;Set Z probe point or define probing grid for Mandala Rose Magnetic Bed x max changed to 290 from 295 due to tongue cooler 
-M557 X10:290 Y10:295 S57:57
+;M557 X10:290 Y10:295 S57:57
 ;M557 X2:299 Y36:299 P9:9                           ; Set Default Mesh - NOTE: take probe offset into account - "full" bed  - 7/19/2021
                                                    ; E.G. If probe offset is 42 on Y, then Y50:290 will take the hotend to Y08 to Y248)
                                                    ; Heaters
 
 ;BLTouch - comment out the following 3 lines if using a IR Probe
-M558 P9 C"^zprobe.in" H5 R1 F150 T6000 A5 S0.02  ; _RRF3_ BLTouch connected to Z probe IN pin -Changed homing speed from 50 to 150 - 10-16-2022
-M950 S0 C"duex.pwm1"				   ; _RRF3_ Define BLTouch Servo (S0) on duet pwm1
+;M558 P9 C"^zprobe.in" H5 R1 F150 T6000 A5 S0.02  ; _RRF3_ BLTouch connected to Z probe IN pin -Changed homing speed from 50 to 150 - 10-16-2022
+;M950 S0 C"duex.pwm1"				   ; _RRF3_ Define BLTouch Servo (S0) on duet pwm1
 
+;=================================================
 ; Z-Probe - Euclid Detachable Omron switch probe
+;=================================================
 
-;M558 K0 P5 C"^zprobe.in" H5 R0.5 F240:120 T9000 A2 S0.03  ; K0 for probe 0, P5 for NC switch, C for input pin, ^ for enabling the native pullup
+M558 P5 C"^zprobe.in" H5 R0.5 F240:120 T9000 A2 S0.03  ; K0 for probe 0, P5 for NC switch, C for input pin, ^ for enabling the native pullup
                                                     ; resistor on Duet2 hardware running RRF3 H dive height of 8mm, F240 probing speed ?mm/sec, 
                                                     ; T9000 travel speed 150mm/sec, A3 number of probes 1, S0.03 max tolerance of 0.03
 
-;G31 K0 P500 X-1 Y35 Z2.84                           ; Set Z probe trigger value, offset and trigger height (18 July 2021)
+;G31 P500 X-1 Y35 Z2.84                           ; Set Z probe trigger value, offset and trigger height (18 July 2021)
                                                     ; Tip: A larger trigger height in G31 moves you CLOSER to the bed
                                                     ; switch plunger is 35mm to the RIGHT and 2 in FRONT of the nozzle
                                                     ; switch triggers 0.9mm BELOW nozzle
-                                                    ; https://duet3d.dozuki.com/Wiki/Test_and_calibrate_the_Z_probe#Section_Fine_tuning_the_trigger_height
+                                                    ; https://docs.duet3d.com/en/User_manual/Connecting_hardware/Z_probe_testing
                                 
 
 ; OFFSET FOR SPECIFIC NOZZLES CURRENTLY INSTALLED
