@@ -14,7 +14,7 @@ echo "pass first logic loop"
 
 G90	                          ; absolute positioning
 
-;M564 H1 S0                    ; Allow movement BEYOND axes boundaries (no space on RC)(RC cannot go beyond until modify rail posotions)
+;M564 H1 S0                    ; Allow movement BEYOND axes boundaries (no space on RC)(RC cannot go beyond until modify rail positions)
 G1 X90 Y300 F6000              ; move to the starting point (6000 for normal speed)
 ; G1 X90 Y305.3  F3000           ; move to intermediate point (3000 for normal speed)
 M400
@@ -27,7 +27,7 @@ M400
 ;G1 X150.0 Y150.0 F6000        ; move to the center of bed (don't think this is needed...)
 M400
 
-; M564 H1 S1                    ; Restrict movement to within axes boundaries (for normal Y movement)(RC cannot go beyond until modify rail posotions)
+; M564 H1 S1                    ; Restrict movement to within axes boundaries (for normal Y movement)(RC cannot go beyond until modify rail positions see M564 above)
 
 echo "DEBUG: complete movement commands"
 
