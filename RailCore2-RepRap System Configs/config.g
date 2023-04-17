@@ -44,12 +44,12 @@ M569 P7 S0				; Drive 7 goes backwards	Right Z
 M350 X16 Y16 Z16 E16 I1             ; set 16x microstepping for axes& extruder, with interpolation 
 ;_RRF3_ comment out:M574 X1 Y1 Z0 S1; set homing switch configuration (x,y at min, z at max) IF YOU NEED TO REVERSE YOUR HOMING SWITCHES CHANGE S1 to S0
 
-M906 X1400 Y1400 Z1000 E800 I30	    ; Set motor currents (mA)- changed x-y to 1400 5/4/2020 z=1200 and idle current(I) from 60 to 30 3/18/2023
+;M906 X1400 Y1400 Z1000 E800 I30	    ; Set motor currents (mA)- changed x-y to 1400 5/4/2020 z=1200 and idle current(I) from 60 to 30 3/18/2023
 M906 X1300 Y1300 Z1000 E1000 I30	; TAS 4/15/2023
 M84 S60								; Set motor idle timeout
-M201 X1750 Y1750 Z250 E1500         ; Accelerations (mm/s^2) chg from X3000 Y3000 Z100 E1500
+M201 X2350 Y2350 Z250 E2000         ; Accelerations (mm/s^2) chg from X3000 Y3000 Z100 E1500 original -- chg from M201 X1750 Y1750 Z250 E1500 - TAS 4/17/2023
 M203 X24000 Y24000 Z900 E3600       ; Maximum speeds (mm/min)
-M566 X600 Y600 Z200 E3600           ; Maximum jerk speeds mm/minute changed jerk from X1000 Y1000 Z100 E1500
+M566 X900 Y900 Z100 E3600           ; Maximum jerk speeds mm/minute changed jerk from X1000 Y1000 Z100 E1500 original -- chg from M566 X600 Y600 Z200 E3600 - TAS 4/17/2023
 ;M579 Xnn Ynn Znn					; Scale Cartesian axes. Example: assume L(set in slicer)=100mm M=actual measurement
 									; Xnnn..Ynnn..Znnn = L/M
 
