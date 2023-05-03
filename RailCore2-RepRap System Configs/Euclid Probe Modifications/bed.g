@@ -29,7 +29,7 @@ echo "DEBUG: Call retractprobe.g macro"
 M402 P0                                    ; retract / remove probe
 echo "DEBUG: Returned from retractprobe.g"
 
-G1 X10 Y10 F4000            	       ; move the head to the corner (optional)
+;G1 X10 Y10 F4000            	       ; move the head to the corner (optional)
 
 ;
 ; Use S-1 for measurements only, without calculations. Use S4 for endstop heights and Z-height only. Use S6 for full 6 factors

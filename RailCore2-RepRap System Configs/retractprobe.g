@@ -1,7 +1,6 @@
 ; Retract BLTouch probe - for RRF 3
 ; Ensure polarity is correct before probing Z
 
-; M280 P0 S90		; Set Servo position S90 is retract probe
 ; Start Euclid Changes
 
 
@@ -13,8 +12,7 @@ if sensors.probes[0].value[0]!= 0
 echo "pass first logic loop"
 
 G90	                          ; absolute positioning
-
-;M564 H1 S0                    ; Allow movement BEYOND axes boundaries (no space on RC)(RC cannot go beyond until modify rail posotions)
+M564 H1 S0                    ; S=0 Allow movement BEYOND axes boundaries H=1 forbid movement of axes that have not been homed
 G1 X90 Y300 F6000              ; move to the starting point (6000 for normal speed)
 ; G1 X90 Y305.3  F3000           ; move to intermediate point (3000 for normal speed)
 M400
@@ -27,7 +25,7 @@ M400
 ;G1 X150.0 Y150.0 F6000        ; move to the center of bed (don't think this is needed...)
 M400
 
-; M564 H1 S1                    ; Restrict movement to within axes boundaries (for normal Y movement)(RC cannot go beyond until modify rail posotions)
+M564 H1 S1                    ; S=1 Restrict movement to within axes boundaries H=1 forbid movement of axes that have not been homed
 
 echo "DEBUG: complete movement commands"
 
