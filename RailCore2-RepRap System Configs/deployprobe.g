@@ -1,11 +1,12 @@
 ; ------------======Deploy Bed leveling Probe=======------
 ; M280 P0 S10 	;Set servo position
 ; Euclid Code Below
+;T.A.Smith
 echo "DEBUG: Running deployprobe.g"
 ; uncomment next line to echo the probe deploy state 
 echo "deployuser token = " ^sensors.probes[0].deployedByUser
 
-;M564 H1 S0     ; Allow movement BEYOND axes boundaries (RC cannot go beyond until modify rail posotions)
+M564 H1 S0     ; S=0 Allow movement BEYOND axes boundaries H=1 forbid movement of axes that have not been homed
 G91                           ; relative positioning
 echo "DEBUG: First Lift Z (8) in deployprobe.g" 
 G1 H2 Z8 F4000        ; move Z 8 for clearance above dock
@@ -33,7 +34,7 @@ while sensors.probes[0].value[0]=1000
   G1 X60 Y300 F1200           ;  slide probe out of dock - slowly
   M400
 echo "DEBUG: Probe Pickup while loop complete"
-; uncomment to echo the probe deplot state 
+; uncomment to echo the probe deploy state 
 echo "deployuser token (after while loop) = " ^sensors.probes[0].deployedByUser
 
 ;G91                           ; relative positioning
@@ -41,7 +42,7 @@ echo "deployuser token (after while loop) = " ^sensors.probes[0].deployedByUser
 ;G1 H2 Z10 F3000               ; move bed to clear probe from build surface (not needed?)
 
 M400                          ; wait for moves to finish
-;M564 H1 S1      ; Restrict movement to within axes boundaries (for normal Y movement)(RC cannot go beyond until modify rail posotions)
+M564 H1 S1      ; S=1 Restrict movement to within axes boundaries H=1 forbid movement of axes that have not been homed
 
 if sensors.probes[0].value[0]!=0
   echo "Probe Pickup while loop complete"

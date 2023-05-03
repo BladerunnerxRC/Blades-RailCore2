@@ -55,7 +55,7 @@ M208 X0 Y0 Z0 S1                    				; set axis minima and low homing switch 
 ; Endstops
 M574 X1 S1 P"xstop"   								; X min active high endstop switch
 M574 Y1 S1 P"ystop"  								; Y min active high endstop switch
-M574 Z0 S2 			 								; Z endstop controlled by BLTouch probe
+M574 Z0 S2 			 								; Z endstop controlled by Euclid probe
 
 ; Z-Probe - Euclid Detachable Omron switch probe
 
@@ -76,7 +76,7 @@ G31 K0 P500 X-1 Y35 Z2.84                           ; Set Z probe trigger value,
 ; G31 X-4 Y36 Z1.74 H5 P25 							; Customize your offsets. (Nozzle X) FilaStruder PEI Sheet: January 29 2021
 ;													; Tip: A larger trigger height in G31 moves you CLOSER to the bed
 ;
-M98 P"filamentsensor.g"								; Call external file to configure filament sensor
+;M98 P"filamentsensor.g"								; Call external file to configure filament sensor
 ;
 
 ; Mesh Bed Leveling area
