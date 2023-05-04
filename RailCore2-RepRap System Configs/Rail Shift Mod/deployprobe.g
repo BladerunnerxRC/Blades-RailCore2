@@ -1,7 +1,7 @@
 ; ------------======Deploy Bed leveling Probe=======------
 ; M280 P0 S10 	;Set servo position
 ; Euclid Code Below
-;T.A.Smith
+; T.A.Smith 5-3-2023  -- Added changes after new x-rail positions
 echo "DEBUG: Running deployprobe.g"
 ; uncomment next line to echo the probe deploy state 
 echo "deployuser token = " ^sensors.probes[0].deployedByUser
@@ -23,15 +23,16 @@ if sensors.probes[0].value[0]!=1000    ; if sensor is value other than 1000 do t
   
 ; if we're here we know it's becasue the above is true which I assume is because you have an NC switch as a probe.
 echo "DEBUG: Pass first logic test"
-G1 X0 Y280 F6000              ; move adjacent to probe dock location
+G1 X-17 Y280 F6000              ; move adjacent to probe dock location
 M400                          ; wait for moves to finish
 echo "DEBUG: Probe Pickup while loop running"
 ; uncomment next line to echo the probe deploy state 
 echo "deployuser token (before while loop) = " ^sensors.probes[0].deployedByUser
 while sensors.probes[0].value[0]=1000
-  G1 X0 Y300 F1200           ;  move over dock  F3000 is standard speed
+  G1 X-17 Y303 F1200           ;  move over dock  F3000 is standard speed
   echo "Probe State = " ^sensors.probes[0].value[0]
-  G1 X60 Y300 F1200           ;  slide probe out of dock - slowly
+  G1 X60 Y303 F1200           ;  slide probe out of dock - slowly
+  G1 X100 Y280 F3000          ; move to in bound location - a little faster
   M400
 echo "DEBUG: Probe Pickup while loop complete"
 ; uncomment to echo the probe deploy state 
