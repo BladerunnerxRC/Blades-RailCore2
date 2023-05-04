@@ -3,12 +3,17 @@
 ; added Eculid stuff and commented out to prepare for upgrade TAS 3/18/2023
 ; slight modifications TAS 5-3-2023
 
+echo "Homing Z"
+M401 P0					;Deploy probe
+M400
 G91                     ; relative positioning
 G1 Z5 F1000 H2		    ; lift Z relative to current position
 G90                     ; absolute positioning
-G1 X150 Y150 F2400     ; go to bed center probe point Euclid immune to magnets
+G1 X150 Y150 F6000     ; go to bed center probe point
 ;G1 X168 Y142 F4000      ; go to bed center (adjusted for magnets) probe point
-G30                     ; home Z by probing the bed
+G30                   ; home Z by probing the bed
+M400
+M402 P0					; retract probe
 G1 H2 Z5 F400           ; lift Z relative to current position
 
 ;===================================================
