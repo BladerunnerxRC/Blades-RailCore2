@@ -1,6 +1,7 @@
 ; homez.g - for RRF 3
 ; called to home the Z axis
 ; added Eculid stuff and commented out to prepare for upgrade TAS 3/18/2023
+; slight modifications TAS 5-3-2023
 
 G91                     ; relative positioning
 G1 Z5 F1000 H2		    ; lift Z relative to current position
