@@ -14,7 +14,8 @@ G1 X150 Y150 F6000     ; go to bed center probe point
 G30                   ; home Z by probing the bed
 M400
 M402 P0					; retract probe
-G1 H2 Z5 F400           ; lift Z relative to current position
+M400
+M300 S4500 P100     ;Beep
 
 ;===================================================
 ; Modify for Euclid detachable probe
