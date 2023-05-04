@@ -1,4 +1,11 @@
-; Configuration file for My Printer - RepRap Firmware v3.x
+; Configuration file for Blade's RailCore 2 - RepRap Firmware v3.x
+;====================================================================
+;Board: Duet WiFi 1.02 or later + DueX5
+;Firmware: RepRapFirmware for Duet 2 WiFi/Ethernet 3.4.2 (2022-09-13)
+;Duet WiFi Server Version: 1.27
+;Duet Web Control 3.4.2
+; TAS 5-3-2023
+;====================================================================
 
 ; COMMUNICATION AND GENERAL
 M111 S0                            	 ; Debug (S0 is off; S1 is on)
@@ -18,7 +25,7 @@ M586 P0 S1                          ; enable HTTP
 M586 P1 S1                          ; enable FTP
 M586 P2 S0                          ; Disable Telnet
 
-M555 P2                           	; Set output to look like Marlin
+
 M575 P1 B57600 S1			; Comms parameters for PanelDue
 M550 P"RailCore2"			; Machine name and Netbios name (can be anything you like)
 
@@ -44,20 +51,22 @@ M569 P7 S0				; Drive 7 goes backwards	Right Z
 M350 X16 Y16 Z16 E16 I1             ; set 16x microstepping for axes& extruder, with interpolation 
 ;_RRF3_ comment out:M574 X1 Y1 Z0 S1; set homing switch configuration (x,y at min, z at max) IF YOU NEED TO REVERSE YOUR HOMING SWITCHES CHANGE S1 to S0
 
-;M906 X1400 Y1400 Z1000 E800 I30	    ; Set motor currents (mA)- changed x-y to 1400 5/4/2020 z=1200 and idle current(I) from 60 to 30 3/18/2023
+;M906 X1400 Y1400 Z1200 E800 I30	    ; Set motor currents (mA)- changed x-y to 1400 5/4/2020 z=1200 and idle current(I) from 60 to 30 3/18/2023-- chg TAS 4-16-2023
 M906 X1300 Y1300 Z1000 E1000 I30	; TAS 4/15/2023
 M84 S60								; Set motor idle timeout
 M201 X2350 Y2350 Z250 E2000         ; Accelerations (mm/s^2) chg from X3000 Y3000 Z100 E1500 original -- chg from M201 X1750 Y1750 Z250 E1500 - TAS 4/17/2023
 M203 X24000 Y24000 Z900 E3600       ; Maximum speeds (mm/min)
 M566 X900 Y900 Z100 E3600           ; Maximum jerk speeds mm/minute changed jerk from X1000 Y1000 Z100 E1500 original -- chg from M566 X600 Y600 Z200 E3600 - TAS 4/17/2023
+;
 ;M579 Xnn Ynn Znn					; Scale Cartesian axes. Example: assume L(set in slicer)=100mm M=actual measurement
 									; Xnnn..Ynnn..Znnn = L/M
 
 ;END STOPS
 M574 X1 S1 P"xstop"			        ; _RRF3_ set X endstop to xstop port active high
 M574 Y1 S1 P"ystop"			        ; _RRF3_ set Y endstop to ystop port active high
-M208 X287 Y300 Z310                 ; set axis maxima and high homing switch positions (adjust to suit your machine) set on 5/1/2020 
-M208 X0 Y0 Z-0.2 S1                 ; set axis minima and low homing switch positions (adjust to make X=0 and Y=0 the edges of the bed)
+;PRINT VOLUME
+M208 X287 Y287 Z310 S0               ; set axis maxima and high homing switch positions
+M208 X0 Y0 Z-0.2 S1                 ; set axis minima and low homing switch positions
 
 ;LEADSCREW LOCATIONS
 ; M671 X-10:-10:333  Y22.5:277.5:150 S7.5  ;Front left, Rear Left, Right  S7.5 is the max correction - measure your own offsets, to the bolt for the yoke of each leadscrew
@@ -91,18 +100,18 @@ M307 H1 A457.8 C194.7 D3.2 S1.00 V24.0 B0 ; Hotend Heater 1 - Hot-end - PID tune
 M307 H0 R0.325 C637.9 D12.53 S1.00 V24.1  ;Heater 0 - MIC 6 Bed - PID tuned @110C 3/30/2021
 
 ; FANS
-M950 F0 C"fan0"						;_RRF3_ define fan0
-M950 F1 C"fan1"						;_RRF3_ define fan1
-M950 F2 C"fan2"						;_RRF3_ define fan2
-M950 F3 C"duex.fan3"				;_RRF3_ define fan3 USED for LED Light
-M106 P0 H-1 				        ; disable thermostatic mode for fan 0
-M106 P1 H-1 			        	; disable thermostatic mode for fan 1
-M106 P2 H-1
-M106 P3 H-1
-M106 P0 S0 			            	; turn off fans
-M106 P1 S0
-M106 P2 S0
-M106 P3 S0
+M950 F0 C"fan0"						;_RRF3_ define fan0 - Hotend Fan
+M950 F1 C"fan1"						;_RRF3_ define fan1 - Part cooling fan
+M950 F2 C"fan2"						;_RRF3_ define fan2  ??
+M950 F3 C"duex.fan3"				;_RRF3_ define fan3 USED for Front LED Light
+M106 P0 H-1 				        ; Init Hotend Fan - disable thermostatic mode for fan 0
+M106 P1 H-1 			        	; Init part cooling fan - disable thermostatic mode for fan 1
+M106 P2 H-1							; ?? not sure if anything is hooked up to this
+M106 P3 H-1							; Init for Front LED Light
+M106 P0 S0 			            	; - Hotend Fan - turn off fans
+M106 P1 S0							; - Part cooling fan - turn off fans
+M106 P2 S0							; ?? not sure if anything is hooked up to this
+M106 P3 S0							; - Front LED Light - turn off light
 	
 ; TOOL DEFINITIONS
 M563 P0 D0 H1                      	; Define tool 0
@@ -119,10 +128,10 @@ G10 P0 S0 R0 F1					    ; Set tool 0 operating and standby temperatures(-273 = "
 ;M558 P1 C"^zprobe.in" H5 F120 T6000 A5 S0.02  ; _RRF3_ IR Probe connected to Z probe IN pin
 ;G31 X0 Y30 Z2.00 P500			; Set the zprobe height and threshold (put your own values here) 
 
-;(Set Z probe point or define probing grid  
+;*******************(Set PRobe Points for Mesh Bed Measurements)**************************** 
 
-M557 X0:287 Y0:256 P20:20
-M557 X0:287 Y0:256 P15:15; 225 points Real 182 points
+;M557 X0:287 Y0:287 P20:20
+M557 X0:287 Y0:256 P15:15; 
 ;M557 X10:287 Y0:250 S25:25
 ;M557 X2:295 Y36:295 P9:9                           ; Set Default Mesh - NOTE: take probe offset into account - "full" bed  - 7/19/2021
                                                    ; E.G. If probe offset is 42 on Y, then Y50:290 will take the hotend to Y08 to Y248)
@@ -132,7 +141,7 @@ M557 X0:287 Y0:256 P15:15; 225 points Real 182 points
 ;M558 P9 C"^zprobe.in" H5 R1 F150 T6000 A5 S0.02  ; _RRF3_ BLTouch connected to Z probe IN pin -Changed homing speed from 50 to 150 - 10-16-2022
 ;M950 S0 C"duex.pwm1"				   ; _RRF3_ Define BLTouch Servo (S0) on duet pwm1
 
-; Z-Probe - Euclid Detachable Omron switch probe
+; ----------==============Z-Probe - Euclid Detachable Omron switch probe===================------------
 
 M558 K0 P5 C"^zprobe.in" H5 R0.5 F240:120 T9000 A3 S0.03  ; K0 for probe 0, P5 for NC switch, C for input pin, ^ for enabling the native pullup
                                                     ; resistor on Duet2 hardware running RRF3 H dive height of 8mm, F240 probing speed ?mm/sec, 
@@ -154,9 +163,9 @@ G31 P500 X-5 Y36 Z6.405 ; 0.6mm Bondtech CHT -- Customize your offsets appropria
 ;G31 X2 Y42 Z3.283 P25 ; 0.8mm Bondtech CHT -- Customize your offsets appropriately - do a paper test, and put the probed value in the Z value here
 
 ; PRESSURE ADVANCE
-M572 D0 S0.06 ; set extruder 0 pressure advance to 0.06 seconds
+; M572 D0 S0.06 ; set extruder 0 pressure advance to 0.06 seconds
 
-;INPUT SHAPING
+;INPUT SHAPING - Activate Accelerometer
 ;M955 P0 C"spi.cs4+spi.cs3" I52 ; Uncomment to activate accelerometer for measurments
 
 T0					; select first hot end
