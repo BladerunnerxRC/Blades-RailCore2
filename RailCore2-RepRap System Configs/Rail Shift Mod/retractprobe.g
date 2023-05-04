@@ -1,6 +1,7 @@
-; Retract Euclid probe - for RRF 3
-; T.A. Smith 5-3-2023 -- updated with new doc loacations after x-rail relocation
-
+; ------------======Retract Euclid Bed leveling Probe=======------
+; 
+; T.A.Smith 5-3-2023  -- Added changes after new x-rail positions
+;
 echo "DEBUG: running retractprobe.g macro"
 
 if sensors.probes[0].value[0]!= 0
