@@ -34,7 +34,7 @@ while sensors.probes[0].value[0]=1000
 G1 X11.5 Y250 F6000			; move to ready position
 M400
 G1 X11.5 Y308.5 F1200           ;  move over dock  F3000 is standard speed
-echo "Probe State = " ^sensors.probes[0].value[0]
+;echo "Probe State = " ^sensors.probes[0].value[0]
 G1 X60 Y308.5 F1200           ;  slide probe out of dock - slowly
 G1 X150 Y150 F8000          ; move to in bound location - a little faster
 M400
