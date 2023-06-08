@@ -4,7 +4,7 @@
 ;Firmware: RepRapFirmware for Duet 2 WiFi/Ethernet 3.4.2 (2022-09-13)
 ;Duet WiFi Server Version: 1.27
 ;Duet Web Control 3.4.2
-; TAS 5-3-2023
+; TAS 6-8-2023
 ;====================================================================
 
 ; COMMUNICATION AND GENERAL
@@ -52,11 +52,11 @@ M350 X16 Y16 Z16 E16 I1             ; set 16x microstepping for axes& extruder, 
 ;_RRF3_ comment out:M574 X1 Y1 Z0 S1; set homing switch configuration (x,y at min, z at max) IF YOU NEED TO REVERSE YOUR HOMING SWITCHES CHANGE S1 to S0
 
 ;M906 X1400 Y1400 Z1200 E800 I30	    ; Set motor currents (mA)- changed x-y to 1400 5/4/2020 z=1200 and idle current(I) from 60 to 30 3/18/2023-- chg TAS 4-16-2023
-M906 X1300 Y1300 Z1000 E1000 I30	; TAS 4/15/2023
+M906 X1300 Y1300 Z1000 E1000 I30	; Set motor currents TAS 4/15/2023
 M84 S60								; Set motor idle timeout
 M201 X2350 Y2350 Z250 E2000         ; Accelerations (mm/s^2) chg from X3000 Y3000 Z100 E1500 original -- chg from M201 X1750 Y1750 Z250 E1500 - TAS 4/17/2023
 M203 X24000 Y24000 Z900 E3600       ; Maximum speeds (mm/min)
-M566 X900 Y900 Z100 E3600           ; Maximum jerk speeds mm/minute changed jerk from X1000 Y1000 Z100 E1500 original -- chg from M566 X600 Y600 Z200 E3600 - TAS 4/17/2023
+M566 X750 Y750 Z100 E3600           ; Maximum jerk speeds mm/minute changed jerk from X1000 Y1000 Z100 E1500 original -- chg from M566 X900 Y900 Z200 E3600 - TAS 5/22/2023
 ;
 ;M579 Xnn Ynn Znn					; Scale Cartesian axes. Example: assume L(set in slicer)=100mm M=actual measurement
 									; Xnnn..Ynnn..Znnn = L/M
@@ -65,7 +65,7 @@ M566 X900 Y900 Z100 E3600           ; Maximum jerk speeds mm/minute changed jerk
 M574 X1 S1 P"xstop"			        ; _RRF3_ set X endstop to xstop port active high
 M574 Y1 S1 P"ystop"			        ; _RRF3_ set Y endstop to ystop port active high
 ;PRINT VOLUME
-M208 X287 Y287 Z310 S0               ; set axis maxima and high homing switch positions
+M208 X303 Y300 Z300 S0               ; set axis maxima and high homing switch positions
 M208 X0 Y0 Z-0.2 S1                 ; set axis minima and low homing switch positions
 
 ;LEADSCREW LOCATIONS
@@ -129,9 +129,8 @@ G10 P0 S0 R0 F1					    ; Set tool 0 operating and standby temperatures(-273 = "
 ;G31 X0 Y30 Z2.00 P500			; Set the zprobe height and threshold (put your own values here) 
 
 ;*******************(Set PRobe Points for Mesh Bed Measurements)**************************** 
-
-;M557 X0:287 Y0:287 P20:20
-M557 X0:287 Y0:256 P15:15; 
+M557 X0:303 Y0:290 P20:20							; Added Y-max 290 because probe located off flex sheet at y=300 TAS 5/27/2023
+;M557 X0:287 Y0:256 P15:15; 
 ;M557 X10:287 Y0:250 S25:25
 ;M557 X2:295 Y36:295 P9:9                           ; Set Default Mesh - NOTE: take probe offset into account - "full" bed  - 7/19/2021
                                                    ; E.G. If probe offset is 42 on Y, then Y50:290 will take the hotend to Y08 to Y248)
@@ -152,14 +151,15 @@ M558 K0 P5 C"^zprobe.in" H5 R0.5 F240:120 T9000 A3 S0.03  ; K0 for probe 0, P5 f
                                                     ; switch plunger is 35mm to the RIGHT and 2 in FRONT of the nozzle
                                                     ; switch triggers 0.9mm BELOW nozzle
                                                     ; https://duet3d.dozuki.com/Wiki/Test_and_calibrate_the_Z_probe#Section_Fine_tuning_the_trigger_height
-                                
+; SKEW CORRECTION
+M556 S100 X-0.381 Y-0.829 Z1.392         
 
 ; OFFSET FOR SPECIFIC NOZZLES CURRENTLY INSTALLED
 ;G31 X2 Y42 Z3.59 P25 ; 0.5mm Nozzle-x -- Customize your offsets appropriately - do a paper test, and put the probed value in the Z value here
 ;G31 X2 Y42 Z3.67 P25 ; 0.3mm Brass -- Customize your offsets appropriately - do a paper test, and put the probed value in the Z value here
 ;G31 X2 Y42 Z3.655 P25 ; 0.8mm E3D Copper-- Customize your offsets appropriately - do a paper test, and put the probed value in the Z value here
-G31 P500 X-5 Y36 Z6.405 ; 0.6mm Bondtech CHT -- Customize your offsets appropriately - do a paper test, and put the probed value in the Z value here
-;G31 P500 X-5 Y36 Z6.305 ; 0.6mm Bondtech CHT -- Customize your offsets appropriately - do a paper test, and put the probed value in the Z value here
+G31 P500 X-5 Y36 Z7.061 ; 0.6mm Bondtech CHT -- Customize your offsets appropriately - do a paper test, and put the probed value in the Z value here
+;G31 P500 X-6 Y36 Z6.305 ; 0.6mm Bondtech CHT -- Customize your offsets appropriately - do a paper test, and put the probed value in the Z value here
 ;G31 X2 Y42 Z3.283 P25 ; 0.8mm Bondtech CHT -- Customize your offsets appropriately - do a paper test, and put the probed value in the Z value here
 
 ; PRESSURE ADVANCE
