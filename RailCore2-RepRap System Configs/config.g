@@ -46,8 +46,9 @@ M569 P5 S0				; Drive 5 goes backwards	Front Left Z
 M569 P6 S0				; Drive 6 goes backwards	Rear Left Z
 M569 P7 S0				; Drive 7 goes backwards	Right Z
 
-
+;=============
 ;STEPPERS
+;=============
 M350 X16 Y16 Z16 E16 I1             ; set 16x microstepping for axes& extruder, with interpolation 
 ;_RRF3_ comment out:M574 X1 Y1 Z0 S1; set homing switch configuration (x,y at min, z at max) IF YOU NEED TO REVERSE YOUR HOMING SWITCHES CHANGE S1 to S0
 
@@ -56,7 +57,12 @@ M906 X1300 Y1300 Z1000 E1000 I30	; TAS 4/15/2023
 M84 S60								; Set motor idle timeout
 M201 X2350 Y2350 Z250 E2000         ; Accelerations (mm/s^2) chg from X3000 Y3000 Z100 E1500 original -- chg from M201 X1750 Y1750 Z250 E1500 - TAS 4/17/2023
 M203 X24000 Y24000 Z900 E3600       ; Maximum speeds (mm/min)
-M566 X900 Y900 Z100 E3600           ; Maximum jerk speeds mm/minute changed jerk from X1000 Y1000 Z100 E1500 original -- chg from M566 X600 Y600 Z200 E3600 - TAS 4/17/2023
+M566 X750 Y750 Z100 E3600           ; Maximum jerk speeds mm/minute changed jerk from X1000 Y1000 Z100 E1500 original -- chg from M566 X600 Y600 Z200 E3600 - TAS 4/17/2023
+
+;-->EXTRUDER E-STEPS
+M92 X200 Y200 Z1600 E826	        ; steps/mm - old E steps 837 changed to 826  04/11/2020
+;-->SKEW CORRECTION
+M556 S100 X-0.381 Y-0.829 Z1.392    ; USED CaliLantern Calculator To find values
 ;
 ;M579 Xnn Ynn Znn					; Scale Cartesian axes. Example: assume L(set in slicer)=100mm M=actual measurement
 									; Xnnn..Ynnn..Znnn = L/M
@@ -65,21 +71,31 @@ M566 X900 Y900 Z100 E3600           ; Maximum jerk speeds mm/minute changed jerk
 M574 X1 S1 P"xstop"			        ; _RRF3_ set X endstop to xstop port active high
 M574 Y1 S1 P"ystop"			        ; _RRF3_ set Y endstop to ystop port active high
 ;PRINT VOLUME
-M208 X287 Y287 Z310 S0               ; set axis maxima and high homing switch positions
+M208 X300 Y300 Z300 S0               ; set axis maxima and high homing switch positions
 M208 X0 Y0 Z-0.2 S1                 ; set axis minima and low homing switch positions
 
 ;LEADSCREW LOCATIONS
 ; M671 X-10:-10:333  Y22.5:277.5:150 S7.5  ;Front left, Rear Left, Right  S7.5 is the max correction - measure your own offsets, to the bolt for the yoke of each leadscrew
 M671 X-12.5:-12.5:343  Y23:277.2:150 S2.5  ;Front left (-12.5,23), Rear Left(-12.5,277.2), Right(343,148) to the bolt for the yoke of each leadscrew
 
-;EXTRUDER E-STEPS
-M92 X200 Y200 Z1600 E826	        ; steps/mm - old E steps 837 changed to 826  04/11/2020
 
-;HEATERS
-;
-M308 S1 P"e0temp" Y"thermistor" A"e0_heat" T100000 B4725 R4700 C7.06e-8 H0 L0	; configure sensor 1 as thermistor on pin e0temp (Hotend)
-M950 H1 C"e0heat" T1				;define Hotend heater is on e0heat
-M143 H1 S300                        ; set the maximum temperature of the hot-end default=300C
+
+;===================
+;HEATERS and SENSORS
+;===================
+M308 S1 P"e0temp" Y"thermistor" A"e0_heat" T100000 B4725 R4700 C7.06e-8 H0 L0	    ; configure sensor 1 as thermistor on pin e0temp (Hotend)
+M950 H1 C"e0heat" T1			                                                	;define Hotend heater is on e0heat
+M143 H1 S300                                                                        ; set the maximum temperature of the hot-end default=300C
+;---
+M308 S0 P"bedtemp" Y"thermistor" A"bed_heat" T100000 B3950 R4700 H0 L0              ;_RRF3_ Bed thermistor, connected to bedtemp on Duet2
+M950 H0 C"bedheat" T0                                                               ; create bed heater output on bedheat and map it to sensor 0
+M140 H0                                                                             ; Inform the firmware that bed heater 0 uses heater 0
+M143 H0 S120                                                                        ; set the maximum bed heater temperature default=120C  
+;---
+;M570 S360                                                                           ; HEATER TIMEOUT - Hot end may be a little slow to heat up so allow it 180 seconds
+;---
+M308 S2 P"duex.e4temp" Y"thermistor" A"keenovo" T100000 B3950 R4700 C7.06E-8 H0 L0  ; Secondary bed thermistor inside heater pad
+M308 S10 Y"mcu-temp" A"mcu-temp"													; Display Duet2 CPU temp in "Extra" to display on temp graph
 ;-----------------------------------------------------------------------------------
 ;If you have a Slice Engineering thermistor, comment out the next line -- Note Filastruder Kit Shipped with E3D thermistor
 ;_RRF3_ comment out: M305 P1 T100000 B4725 R4700 H0 L0 C7.06e-8	; Put your own H and/or L values here to set the first nozzle thermistor ADC correction
@@ -88,18 +104,18 @@ M143 H1 S300                        ; set the maximum temperature of the hot-end
 				;_RRF3_ define Bed heater is on bedheat
 ;_RRF3_ comment out: M305 P0 T100000 B3950 R4700 H0 L0	; Put your own H and/or L values here to set the bed thermistor ADC correction
 ;-----------------------------------------------------------------------------------
-M308 S0 P"bedtemp" Y"thermistor" A"bed_heat" T100000 B3950 R4700 H0 L0 		;_RRF3_ Bed thermistor, connected to bedtemp on Duet2
-M950 H0 C"bedheat" T0               ; create bed heater output on bedheat and map it to sensor 0
-M140 H0                             ; Inform the firmware that bed heater 0 uses heater 0
-M140 H0                             ; Standby and initial Temp for bed set to 0 (-273 = "off")  (** before M143 )
-M143 H0 S120                        ; set the maximum bed temperature default=120C
-M570 S360				            ; HEATER TIMEOUT - Hot end may be a little slow to heat up so allow it 180 seconds
 
-;PID SETTINGS  
-M307 H1 A457.8 C194.7 D3.2 S1.00 V24.0 B0 ; Hotend Heater 1 - Hot-end - PID tuned @ 240C 4/10/2020
-M307 H0 R0.325 C637.9 D12.53 S1.00 V24.1  ;Heater 0 - MIC 6 Bed - PID tuned @110C 3/30/2021
 
+
+;============
+;PID SETTINGS
+;============  
+M307 H1 A457.8 C194.7 D3.2 S1.00 V24.0 B0                                           ; Hotend Heater 1 - Hot-end - PID tuned @ 240C 4/10/2020
+M307 H0 R0.325 C637.9 D12.53 S1.00 V24.1                                            ; Heater 0 - MIC 6 Bed - PID tuned @110C 3/30/2021
+
+;============
 ; FANS
+;============
 M950 F0 C"fan0"						;_RRF3_ define fan0 - Hotend Fan
 M950 F1 C"fan1"						;_RRF3_ define fan1 - Part cooling fan
 M950 F2 C"fan2"						;_RRF3_ define fan2  ??
@@ -112,8 +128,10 @@ M106 P0 S0 			            	; - Hotend Fan - turn off fans
 M106 P1 S0							; - Part cooling fan - turn off fans
 M106 P2 S0							; ?? not sure if anything is hooked up to this
 M106 P3 S0							; - Front LED Light - turn off light
-	
+
+;=================
 ; TOOL DEFINITIONS
+;=================
 M563 P0 D0 H1                      	; Define tool 0
 G10 P0 X0 Y0 Z0                     ; Set tool 0 axis offsets
 G10 P0 S0 R0                       	; Set tool 0 operating and standby temperatures
@@ -130,8 +148,9 @@ G10 P0 S0 R0 F1					    ; Set tool 0 operating and standby temperatures(-273 = "
 
 ;*******************(Set PRobe Points for Mesh Bed Measurements)**************************** 
 
+M557 X0:303 Y0:290 P20:20							; Added Y-max 290 because probe located off flex sheet at y=300 TAS 5/27/2023
 ;M557 X0:287 Y0:287 P20:20
-M557 X0:287 Y0:256 P15:15; 
+;M557 X0:287 Y0:256 P15:15; 
 ;M557 X10:287 Y0:250 S25:25
 ;M557 X2:295 Y36:295 P9:9                           ; Set Default Mesh - NOTE: take probe offset into account - "full" bed  - 7/19/2021
                                                    ; E.G. If probe offset is 42 on Y, then Y50:290 will take the hotend to Y08 to Y248)
@@ -158,8 +177,8 @@ M558 K0 P5 C"^zprobe.in" H5 R0.5 F240:120 T9000 A3 S0.03  ; K0 for probe 0, P5 f
 ;G31 X2 Y42 Z3.59 P25 ; 0.5mm Nozzle-x -- Customize your offsets appropriately - do a paper test, and put the probed value in the Z value here
 ;G31 X2 Y42 Z3.67 P25 ; 0.3mm Brass -- Customize your offsets appropriately - do a paper test, and put the probed value in the Z value here
 ;G31 X2 Y42 Z3.655 P25 ; 0.8mm E3D Copper-- Customize your offsets appropriately - do a paper test, and put the probed value in the Z value here
-G31 P500 X-5 Y36 Z6.405 ; 0.6mm Bondtech CHT -- Customize your offsets appropriately - do a paper test, and put the probed value in the Z value here
-;G31 P500 X-5 Y36 Z6.305 ; 0.6mm Bondtech CHT -- Customize your offsets appropriately - do a paper test, and put the probed value in the Z value here
+G31 P500 X-5 Y36 Z7.061 ; 0.6mm Bondtech CHT -- Customize your offsets appropriately - do a paper test, and put the probed value in the Z value here
+;G31 P500 X-6 Y36 Z6.305 ; 0.6mm Bondtech CHT -- Customize your offsets appropriately - do a paper test, and put the probed value in the Z value here
 ;G31 X2 Y42 Z3.283 P25 ; 0.8mm Bondtech CHT -- Customize your offsets appropriately - do a paper test, and put the probed value in the Z value here
 
 ; PRESSURE ADVANCE
