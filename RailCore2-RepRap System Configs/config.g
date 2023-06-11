@@ -170,8 +170,7 @@ M558 K0 P5 C"^zprobe.in" H5 R0.5 F240:120 T9000 A3 S0.03  ; K0 for probe 0, P5 f
                                                     ; switch plunger is 35mm to the RIGHT and 2 in FRONT of the nozzle
                                                     ; switch triggers 0.9mm BELOW nozzle
                                                     ; https://duet3d.dozuki.com/Wiki/Test_and_calibrate_the_Z_probe#Section_Fine_tuning_the_trigger_height
-; SKEW CORRECTION
-M556 S100 X-0.381 Y-0.829 Z1.392         
+       
 
 ; OFFSET FOR SPECIFIC NOZZLES CURRENTLY INSTALLED
 ;G31 X2 Y42 Z3.59 P25 ; 0.5mm Nozzle-x -- Customize your offsets appropriately - do a paper test, and put the probed value in the Z value here
