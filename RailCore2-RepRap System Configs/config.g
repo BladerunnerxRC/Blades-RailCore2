@@ -1,13 +1,16 @@
-; Configuration file for Blade's RailCore 2 - RepRap Firmware v3.x
+;====================================================================
+Configuration file for Blade's RailCore 2 - RepRap Firmware v3.x
 ;====================================================================
 ;Board: Duet WiFi 1.02 or later + DueX5
 ;Firmware: RepRapFirmware for Duet 2 WiFi/Ethernet 3.4.2 (2022-09-13)
 ;Duet WiFi Server Version: 1.27
 ;Duet Web Control 3.4.2
-; TAS 6-8-2023
+; TAS 6-12-2023
 ;====================================================================
 
+;===================
 ; COMMUNICATION AND GENERAL
+;===================
 M111 S0                            	 ; Debug (S0 is off; S1 is on)
 M929 P"eventlog.txt" S2             	; Start logging to file eventlog.txt
 M915 X Y S10 F0 R1                  	; log motor stalls
@@ -16,8 +19,9 @@ G90                            	        ; Send absolute coordinates...
 M83                                	; ...but relative extruder moves
 M669 K1					; Select CoreXY kinematics (RRF 2.03 and later)
 M555 P2								; Set output to look like Marlin
-
+;===================
 ;*** Wifi NETWORKING
+;===================
 ; For M586 'Pnn' 0 = HTTP or HTTPS, 1 = FTP or SFTP, 2 = Telnet or SSH
 ; Snn 0 = disable this protocol, 1 = enable this protocol
 M552 S1								; Enable WiFi
@@ -36,15 +40,15 @@ M551 Pmyrap                        ; Machine password (used for FTP too)
 
 ; (AXIS AND MOTOR CONFIGURATION)
 
-M584 X0 Y1 Z5:6:7 E3		   	; Map Z to drivers 5, 6, 7. Define unused drivers 3,4,8 and 9 as extruders removed - E 4,8 and 9 per Duet3D Support 4/13/2020
-M569 P0 S0                          	; Drive 0 goes forwards (change to S0 to reverse it) X stepper (Rear)
-M569 P1 S1                          	; Drive 1 goes backwards	Y Stepper (Front)
-M569 P2 S1                          	; Drive 2 goes forwards		(Unused)
-M569 P3 S0                        	; Drive 3 goes forwards		Extruder (forward for LDO motor)
-M569 P4 S1                          	; Drive 4 goes forwards		(unused)
-M569 P5 S0				; Drive 5 goes backwards	Front Left Z
-M569 P6 S0				; Drive 6 goes backwards	Rear Left Z
-M569 P7 S0				; Drive 7 goes backwards	Right Z
+M584 X0 Y1 Z5:6:7 E3		; Map Z to drivers 5, 6, 7. Define unused drivers 3,4,8 and 9 as extruders removed - E 4,8 and 9 per Duet3D Support 4/13/2020
+M569 P0 S0					; Drive 0 goes forwards (change to S0 to reverse it) X stepper (Rear) -- on Duet2 Board
+M569 P1 S1					; Drive 1 goes backwards	Y Stepper (Front) -- on Duet2 Board
+M569 P2 S1					; Drive 2 goes forwards		(Unused)
+M569 P3 S0					; Drive 3 goes forwards		Extruder (forward for LDO motor) -- on Duet2 Board
+M569 P4 S1					; Drive 4 goes forwards		(unused)
+M569 P5 S0					; Drive 5 goes backwards	Front Left Z -- on Duex Board
+M569 P6 S0					; Drive 6 goes backwards	Rear Left Z -- on Duex Board 
+M569 P7 S0					; Drive 7 goes backwards	Right Z -- on Duex Board
 
 ;=============
 ;STEPPERS
@@ -59,22 +63,34 @@ M201 X2350 Y2350 Z250 E2000         ; Accelerations (mm/s^2) chg from X3000 Y300
 M203 X24000 Y24000 Z900 E3600       ; Maximum speeds (mm/min)
 M566 X750 Y750 Z100 E3600           ; Maximum jerk speeds mm/minute changed jerk from X1000 Y1000 Z100 E1500 original -- chg from M566 X600 Y600 Z200 E3600 - TAS 4/17/2023
 
+;===================
 ;-->EXTRUDER E-STEPS
+;===================
 M92 X200 Y200 Z1600 E826	        ; steps/mm - old E steps 837 changed to 826  04/11/2020
+;===================
 ;-->SKEW CORRECTION
+;===================
 M556 S100 X-0.381 Y-0.829 Z1.392    ; USED CaliLantern Calculator To find values
 ;
+;===================
+;SCALE
+;===================
 ;M579 Xnn Ynn Znn					; Scale Cartesian axes. Example: assume L(set in slicer)=100mm M=actual measurement
 									; Xnnn..Ynnn..Znnn = L/M
-
+;===================
 ;END STOPS
+;===================
 M574 X1 S1 P"xstop"			        ; _RRF3_ set X endstop to xstop port active high
 M574 Y1 S1 P"ystop"			        ; _RRF3_ set Y endstop to ystop port active high
+;===================
 ;PRINT VOLUME
+;===================
 M208 X287 Y287 Z310 S0               ; set axis maxima and high homing switch positions
 M208 X0 Y0 Z-0.2 S1                 ; set axis minima and low homing switch positions
 
+;===================
 ;LEADSCREW LOCATIONS
+;===================
 ; M671 X-10:-10:333  Y22.5:277.5:150 S7.5  ;Front left, Rear Left, Right  S7.5 is the max correction - measure your own offsets, to the bolt for the yoke of each leadscrew
 M671 X-12.5:-12.5:343  Y23:277.2:150 S2.5  ;Front left (-12.5,23), Rear Left(-12.5,277.2), Right(343,148) to the bolt for the yoke of each leadscrew
 
@@ -96,6 +112,8 @@ M143 H0 S120                                                                    
 ;---
 M308 S2 P"duex.e4temp" Y"thermistor" A"keenovo" T100000 B3950 R4700 C7.06E-8 H0 L0  ; Secondary bed thermistor inside heater pad
 M308 S10 Y"mcu-temp" A"mcu-temp"													; Display Duet2 CPU temp in "Extra" to display on temp graph
+M308 S11 Y"drivers" A"Duet stepper drivers"           ; defines sensor 11 as stepper driver temperature sensor tas-6/12/2023
+M308 S12 Y"drivers-duex" A"Duex stepper drivers"      ; for Duet 2 WiFi/Ethernet with DueX2/5, defines sensor 12 as DueX2/5 stepper driver temps tas-6/12/2023
 ;-----------------------------------------------------------------------------------
 ;If you have a Slice Engineering thermistor, comment out the next line -- Note Filastruder Kit Shipped with E3D thermistor
 ;_RRF3_ comment out: M305 P1 T100000 B4725 R4700 H0 L0 C7.06e-8	; Put your own H and/or L values here to set the first nozzle thermistor ADC correction
@@ -110,8 +128,8 @@ M308 S10 Y"mcu-temp" A"mcu-temp"													; Display Duet2 CPU temp in "Extra"
 ;============
 ;PID SETTINGS
 ;============  
-M307 H1 A457.8 C194.7 D3.2 S1.00 V24.0 B0                                           ; Hotend Heater 1 - Hot-end - PID tuned @ 240C 4/10/2020
-M307 H0 R0.325 C637.9 D12.53 S1.00 V24.1                                            ; Heater 0 - MIC 6 Bed - PID tuned @110C 3/30/2021
+M307 H1 A457.8 C194.7 D3.2 S1.00 V24.0 B0           ; Hotend Heater 1 - Hot-end - PID tuned @ 240C 4/10/2020
+M307 H0 R0.325 C637.9 D12.53 S1.00                  ; Heater 0 - MIC 6 Bed - PID tuned @110C 3/30/2021  - removed V24.1, unused for bed heater 6/12/2023
 
 ;============
 ; FANS
@@ -120,10 +138,10 @@ M950 F0 C"fan0"						;_RRF3_ define fan0 - Hotend Fan
 M950 F1 C"fan1"						;_RRF3_ define fan1 - Part cooling fan
 M950 F2 C"fan2"						;_RRF3_ define fan2  ??
 M950 F3 C"duex.fan3"				;_RRF3_ define fan3 USED for Front LED Light
-M106 P0 H-1 				        ; Init Hotend Fan - disable thermostatic mode for fan 0
-M106 P1 H-1 			        	; Init part cooling fan - disable thermostatic mode for fan 1
+M106 P0 H-1 				        ; Init Hotend Fan - disable thermostatic mode for fan 0 -- H-1 disables thermostatic mode
+M106 P1 H-1 			        	; Init part cooling fan - disable thermostatic mode for fan 1 -- H-1 disables thermostatic mode
 M106 P2 H-1							; ?? not sure if anything is hooked up to this
-M106 P3 H-1							; Init for Front LED Light
+M106 P3 H-1							; Init for Front LED Light, front light off at boot. H1=on
 M106 P0 S0 			            	; - Hotend Fan - turn off fans
 M106 P1 S0							; - Part cooling fan - turn off fans
 M106 P2 S0							; ?? not sure if anything is hooked up to this
